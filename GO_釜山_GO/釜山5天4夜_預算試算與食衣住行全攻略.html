@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GO 釜山 GO｜5 天 4 夜現金預算試算與食衣住行全攻略 (2026/12/3–12/7)</title>
+<style>
+  :root {
+    --primary: #1a56db;
+    --primary-light: #e1effe;
+    --secondary: #0e9f6e;
+    --accent: #f59e0b;
+    --danger: #e02424;
+    --bg: #f3f4f6;
+    --card-bg: #ffffff;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --shadow: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding-bottom: 60px;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #0ea5e9 100%);
+    color: white;
+    padding: 32px 20px 28px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  }
+  header h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 8px; }
+  header p { font-size: 0.95rem; opacity: 0.92; max-width: 680px; margin: 0 auto; }
+  .badge-bar {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 14px;
+  }
+  .badge {
+    background: rgba(255,255,255,0.18); backdrop-filter: blur(4px);
+    padding: 4px 12px; border-radius: 999px; font-size: 0.82rem; font-weight: 500;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+  /* Tabs */
+  .nav-tabs {
+    display: flex; gap: 8px; overflow-x: auto; padding: 16px 0 8px;
+    position: sticky; top: 0; background: var(--bg); z-index: 20;
+    border-bottom: 1px solid var(--border); margin-bottom: 20px;
+  }
+  .tab-btn {
+    padding: 10px 18px; border: none; border-radius: 10px;
+    background: var(--card-bg); color: var(--text-muted);
+    font-weight: 600; font-size: 0.92rem; cursor: pointer;
+    white-space: nowrap; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .tab-btn.active {
+    background: var(--primary); color: white; box-shadow: 0 3px 8px rgba(26,86,219,0.3);
+  }
+  .tab-content { display: none; animation: fadeIn 0.25s ease; }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Cards */
+  .card {
+    background: var(--card-bg); border-radius: 14px; padding: 22px;
+    margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: 1.15rem; font-weight: 700; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px; color: #1e3a8a;
+  }
+
+  /* Budget Calculator */
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px; margin-bottom: 20px;
+  }
+  .stat-box {
+    background: #f8fafc; border-radius: 12px; padding: 16px;
+    border: 1px solid #e2e8f0; text-align: center;
+  }
+  .stat-box.highlight { background: var(--primary-light); border-color: #93c5fd; }
+  .stat-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
+  .stat-value { font-size: 1.55rem; font-weight: 800; margin: 4px 0; color: var(--text); }
+  .stat-sub { font-size: 0.8rem; color: var(--text-muted); }
+
+  .control-row {
+    display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+    background: #f8fafc; padding: 14px 16px; border-radius: 10px; margin-bottom: 18px;
+  }
+  .control-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 180px; }
+  .control-group label { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); }
+  .control-group input[type="number"] {
+    padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px;
+    font-size: 1rem; font-weight: 700; width: 100%;
+  }
+  .preset-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .preset-btn {
+    padding: 6px 12px; border-radius: 8px; border: 1px solid #cbd5e1;
+    background: white; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  }
+  .preset-btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+  .category-block { margin-bottom: 18px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .category-header {
+    background: #f9fafb; padding: 12px 16px; font-weight: 700; font-size: 0.98rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .slider-item { padding: 14px 16px; border-bottom: 1px solid #f3f4f6; }
+  .slider-item:last-child { border-bottom: none; }
+  .slider-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .slider-name { font-weight: 600; font-size: 0.92rem; }
+  .slider-hint { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 6px; }
+  .slider-val { font-weight: 800; color: var(--primary); font-size: 0.95rem; }
+  input[type="range"] {
+    width: 100%; accent-color: var(--primary); cursor: pointer; height: 6px;
+  }
+
+  /* Itinerary Timeline */
+  .day-card { border-left: 4px solid var(--primary); }
+  .day-header {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+    margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  }
+  .day-title { font-size: 1.15rem; font-weight: 800; color: #1e3a8a; }
+  .day-route { font-size: 0.85rem; color: var(--text-muted); background: #f1f5f9; padding: 3px 10px; border-radius: 6px; }
+  .timeline { list-style: none; position: relative; padding-left: 18px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px;
+    width: 2px; background: #cbd5e1;
+  }
+  .timeline li { position: relative; margin-bottom: 12px; font-size: 0.92rem; }
+  .timeline li::before {
+    content: ""; position: absolute; left: -17px; top: 7px;
+    width: 10px; height: 10px; border-radius: 50%; background: var(--primary); border: 2px solid white;
+  }
+  .time-tag { font-weight: 700; color: var(--primary); margin-right: 6px; font-variant-numeric: tabular-nums; }
+  .pay-tag {
+    display: inline-block; font-size: 0.75rem; padding: 1px 7px; border-radius: 4px;
+    font-weight: 700; margin-left: 6px; vertical-align: middle;
+  }
+  .pay-cash { background: #fef3c7; color: #b45309; }
+  .pay-card { background: #dcfce7; color: #15803d; }
+  .pay-tmoney { background: #dbeafe; color: #1d4ed8; }
+  .alert-box {
+    background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 14px;
+    border-radius: 8px; margin-top: 12px; font-size: 0.88rem; color: #78350f;
+  }
+  .alert-box.danger { background: #fef2f2; border-left-color: #ef4444; color: #7f1d1d; }
+
+  /* 4 Pillars Grid */
+  .pillar-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;
+  }
+  .pillar-card {
+    background: white; border-radius: 14px; padding: 20px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .pillar-card h3 { font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .pillar-card ul { padding-left: 18px; font-size: 0.9rem; }
+  .pillar-card li { margin-bottom: 8px; }
+
+  /* Checklist */
+  .checklist label {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;
+    border-bottom: 1px solid #f3f4f6; cursor: pointer; font-size: 0.92rem;
+  }
+  .checklist label:hover { background: #f8fafc; }
+  .checklist input[type="checkbox"] { margin-top: 4px; width: 17px; height: 17px; accent-color: var(--primary); }
+  .checked-text { text-decoration: line-through; color: var(--text-muted); }
+
+  footer {
+    text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🇰🇷 GO 釜山 GO｜5 天 4 夜旅伴共享攻略</h1>
+  <p>2026/12/03 (四) – 12/07 (一)｜海雲台 L7 連住・現金拖曳試算・行程健檢與食衣住行懶人包</p>
+  <div class="badge-bar">
+    <span class="badge">🏨 全程連住 L7 海雲台</span>
+    <span class="badge">🌡️ 12月初氣溫約 2°C～11°C</span>
+    <span class="badge">💳 刷卡為主・小額現金為輔</span>
+  </div>
+</header>
+
+<div class="container">
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('budget', this)">💰 現金預算拖曳試算</button>
+    <button class="tab-btn" onclick="switchTab('itinerary', this)">📅 每日行程與動線健檢</button>
+    <button class="tab-btn" onclick="switchTab('tips', this)">🧳 食衣住行注意事項</button>
+    <button class="tab-btn" onclick="switchTab('checklist', this)">✅ 出發前確認清單</button>
+  </div>
+
+  <!-- TAB 1: BUDGET CALCULATOR -->
+  <div id="tab-budget" class="tab-content active">
+    <div class="card">
+      <div class="card-title">📊 個人 5 天現金需求即時試算（拖動下方滑桿調整）</div>
+      
+      <div class="summary-grid">
+        <div class="stat-box highlight">
+          <div class="stat-label">預估現金總花費 (KRW)</div>
+          <div class="stat-value" id="totalKrw">₩ 155,000</div>
+          <div class="stat-sub" id="totalTwd">約台幣 NT$ 3,793</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">預計每人兌換韓元</div>
+          <div class="stat-value" id="budgetKrwDisplay">₩ 180,000</div>
+          <div class="stat-sub" id="budgetTwdDisplay">約台幣 NT$ 4,405</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">預估剩餘 / 超支差額</div>
+          <div class="stat-value" id="diffKrw">+ ₩ 25,000</div>
+          <div class="stat-sub" id="diffStatus">緩衝充足，適合當備用金</div>
+        </div>
+      </div>
+
+      <div class="control-row">
+        <div class="control-group">
+          <label>設定每人換匯預算 (KRW 韓元)</label>
+          <input type="number" id="targetBudget" value="180000" step="10000" oninput="recalc()">
+        </div>
+        <div class="control-group">
+          <label>參考匯率 (1 台幣兌換韓元)</label>
+          <input type="number" id="exchangeRate" value="40.86" step="0.1" oninput="recalc()">
+        </div>
+        <div class="control-group">
+          <label>快速套用消費模式</label>
+          <div class="preset-btns">
+            <button class="preset-btn" onclick="applyPreset('frugal')">極簡刷卡派 (₩11萬)</button>
+            <button class="preset-btn" onclick="applyPreset('standard')">標準逛吃派 (₩15.5萬)</button>
+            <button class="preset-btn" onclick="applyPreset('foodie')">市場爆吃派 (₩22萬)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 1 -->
+      <div class="category-block">
+        <div class="category-header">
+          <span>🚇 1. 大眾運輸儲值（須現金加值）</span>
+          <span id="cat1Total">₩ 42,500</span>
+        </div>
+        <div class="slider-item">
+          <div class="slider-top">
+            <span class="slider-name">交通卡空卡費（T-money / EZL）</span>
+            <span class="slider-val" id="val_card">₩ 2,500</span>
+          </div>
+          <span class="slider-hint">已有韓國交通卡或使用 iPhone Apple 錢包可調為 0</span>
+          <input type="range" id="sl_card" min="0" max="10000" step="500" value="2500" oninput="recalc()">
+        </div>
+        <div class="slider-item">
+          <div class="slider-top">
+            <span class="slider-name">5 天地鐵＋公車儲值金</span>
+            <span class="slider-val" id="val_transit">₩ 40,000</span>
+          </div>
+          <span class="slider-hint">行程含機場來回＋海雲台往返南浦洞、松島、甘川洞、西面（跨區較多建議抓 3.5～4.5 萬）</span>
+          <input type="range" id="sl_transit" min="15000" max="80000" step="5000" value="40000" oninput="recalc()">
+        </div>
+      </div>
+
+      <!-- Category 2 -->
+      <div class="category-block">
+        <div class="category-header">
+          <span>🍢 2. 傳統市場與路邊攤小吃（行程重點現金區）</span>
+          <span id="cat2Total">₩ 85,000</span>
+        </div>
+        <div class="slider-item">
+          <div class="slider-top">
+            <span class="slider-name">Day 1 海雲台傳統市場 & 路邊熱狗攤</span>
+            <span class="slider-val" id="val_d1market">₩ 30,000</span>
+          </div>
+          <span class="slider-hint">盲鰻、糖餅、辣炒年糕、明朗熱狗（명랑핫도그）、海鮮煎餅等攤販多只收現金</span>
+          <input type="range" id="sl_d1market" min="0" max="100000" step="5000" value="30000" oninput="recalc()">
+        </div>
+        <div class="slider-item">
+          <div class="slider-top">
+            <span class="slider-name">Day 2 南浦洞街邊小吃 & 富平/國際市場</span>
+            <span class="slider-val" id="val_d2market">₩ 35,000</span>
+          </div>
+          <span class="slider-hint">行程在南浦洞停留 5 小時，堅果糖餅、魚板串、市場熟食與小配件攤位</span>
+          <input type="range" id="sl_d2market" min="0" max="120000" step="5000" value="35000" oninput="recalc()">
+        </div>
+        <div class="slider-item">
+          <div class="slider-top">
+            <span class="slider-name">Day 3 甘川文化村 & 廣安里小攤點心</span>
+            <span class="slider-val" id="val_d3market">₩ 20,000</span>
+          </div>
+          <span class="slider-hint">甘川洞特色飲品、紀念品小店、廣安里海邊咖啡小點或拍貼機零錢</span>
+          <input type="range" id="sl_d3market" min="0" max="80000" step="5000" value="20000" oninput="recalc()">
+        </div>
+      </div>
+
+      <!-- Category 3 -->
+      <div class="category-block">
+        <div class="category-header">
+          <span>🍜 3. 只收現金老店與備用金（其餘餐廳直接刷卡）</span>
+          <span id="cat3Total">₩ 27,500</span>
+        </div>
+        <div class="slider-item">
+          <div class="slider-top">
+            <span class="slider-name">傳統小餐館（如東萊麵食 Dongmyeonsik 等）</span>
+            <span class="slider-val" id="val_eatery">₩ 12,500</span>
+          </div>
+          <span class="slider-hint">多數餐廳與連鎖店（EGG DROP、古來思魚糕、60炸雞、emart、新世界百貨）皆可刷卡，僅預留 1 餐現金</span>
+          <input type="range" id="sl_eatery" min="0" max="60000" step="2500" value="12500" oninput="recalc()">
+        </div>
+        <div class="slider-item">
+          <div class="slider-top">
+            <span class="slider-name">臨時無法刷卡 / 朋友分帳備用金</span>
+            <span class="slider-val" id="val_buffer">₩ 15,000</span>
+          </div>
+          <span class="slider-hint">投幣置物櫃、自動販賣機或信用卡偶發刷不過時的保險金</span>
+          <input type="range" id="sl_buffer" min="0" max="50000" step="5000" value="15000" oninput="recalc()">
+        </div>
+      </div>
+
+      <p style="font-size:0.84rem; color:var(--text-muted);">
+        💡 <strong>換匯策略：</strong>12/3 抵達金海機場時，先在機場換 <strong>1,000 台幣</strong>（約 4 萬韓元）應付機場輕軌、交通卡儲值與第一天下午茶；隔天（12/4）中午到<strong>南浦洞換錢所（映珍／友利換錢所）</strong>匯率最好，再換剩下的金額即可！
+      </p>
+    </div>
+  </div>
+
+  <!-- TAB 2: ITINERARY & OPTIMIZATION -->
+  <div id="tab-itinerary" class="tab-content">
+    <div class="card day-card">
+      <div class="day-header">
+        <span class="day-title">Day 1｜12/03 (四) 抵達釜山 → 海雲台藍線公園與市場夜宵</span>
+        <span class="day-route">桃園 → 金海機場 → 海雲台</span>
+      </div>
+      <ul class="timeline">
+        <li><span class="time-tag">05:55–11:15</span> 桃園機場 T1 飛往釜山金海機場（PUS）</li>
+        <li><span class="time-tag">11:15–13:28</span> 入境領行李、機場換少量韓元，搭機場輕軌轉地鐵 2 號線至 <strong>L7 海雲台</strong> 寄放行李 <span class="pay-tag pay-tmoney">交通卡</span></li>
+        <li><span class="time-tag">14:33–15:40</span> <strong>古來思魚糕 海雲台店</strong> <span class="pay-tag pay-card">可刷卡</span> → <strong>海雲台 BADA 海苔飯捲</strong> <span class="pay-tag pay-card">可刷卡</span></li>
+        <li><span class="time-tag">16:00–18:35</span> <strong>尾浦藍線廣場 → 海雲台藍線公園（青沙浦站）</strong> <span class="pay-tag pay-card">建議先線上刷卡預約</span></li>
+        <li><span class="time-tag">18:35–22:07</span> <strong>尾浦廣場 → emart 海雲台店</strong> <span class="pay-tag pay-card">可刷卡/退稅</span> → <strong>海雲台傳統市場 & 明朗熱狗</strong> <span class="pay-tag pay-cash">備現金</span></li>
+        <li><span class="time-tag">23:27</span> <strong>60 炸雞（60계치킨）</strong> <span class="pay-tag pay-card">可刷卡</span> → 返回 L7 海雲台休息</li>
+      </ul>
+      <div class="alert-box danger">
+        ⚠️ <strong>Day 1 關鍵動線提醒：</strong><br>
+        1. <strong>藍線公園順序與日落時間：</strong>12月初釜山約 <strong>17:15 左右天黑</strong>。你們 16:00 到尾浦出發去青沙浦正好趕上夕陽，但要注意從青沙浦回程若搭海岸列車，末班車時間冬季會提早，務必提前在官網刷卡預訂好時段（強烈建議「尾浦→青沙浦」搭天空膠囊，回程搭海岸列車或公車）。<br>
+        2. <strong>emart 營業時間：</strong>韓國大型超市（emart）通常營業到 <strong>22:00 或 23:00</strong>，且每月第 2、4 個週日公休（12/3 是週四有開），建議先逛完藍線公園就先去 emart 買伴手禮放回飯店，再去傳統市場吃晚餐與 60 炸雞，不用提著大包小包逛市場！
+      </div>
+    </div>
+
+    <div class="card day-card">
+      <div class="day-header">
+        <span class="day-title">Day 2｜12/04 (五) 機張斜坡滑車 → 南浦洞大逛街</span>
+        <span class="day-route">海雲台 → 機張 → 南浦洞 → 海雲台</span>
+      </div>
+      <ul class="timeline">
+        <li><span class="time-tag">07:45–08:16</span> L7 海雲台出發 → <strong>EGG DROP 海雲台店</strong>吃早餐 <span class="pay-tag pay-card">自助點餐機刷卡</span></li>
+        <li><span class="time-tag">10:00–11:30</span> <strong>Skyline Luge 釜山（機張斜坡滑車）</strong> <span class="pay-tag pay-card">可刷卡/線上購票</span></li>
+        <li><span class="time-tag">12:12–17:12</span> <strong>南浦洞商圈</strong>（光復路時尚街、BIFF廣場、札嘎其市場、富平罐頭市場） <span class="pay-tag pay-cash">小吃現金</span> <span class="pay-tag pay-card">服飾美妝刷卡</span></li>
+        <li><span class="time-tag">17:42–19:13</span> 返回海雲台（行程表列 emart 海雲台店，若 Day 1 已逛過可改去海雲台海水浴場看 12 月冬季光之慶典燈飾）</li>
+      </ul>
+      <div class="alert-box">
+        💡 <strong>Day 2 交通時間提醒：</strong>機張（Skyline Luge）位於釜山東北角，南浦洞位於西南角，兩地相距較遠，實際搭東海線轉地鐵 1 號線約需 <strong>1 小時 15 分～1 小時 30 分</strong>（原行程估 42 分鐘會來不及），建議中午 12:30～13:00 抵達南浦洞剛好先去<strong>換錢所換韓元</strong>再吃午餐。
+      </div>
+    </div>
+
+    <div class="card day-card">
+      <div class="day-header">
+        <span class="day-title">Day 3｜12/05 (六) 松島海上纜車 → 甘川文化村 → 廣安里夜景</span>
+        <span class="day-route">海雲台 → 松島 → 甘川洞 → 廣安里</span>
+      </div>
+      <ul class="timeline">
+        <li><span class="time-tag">08:00–10:00</span> L7 海雲台出發前往岩南洞（海雲台到松島跨越大半個市區，搭地鐵轉公車或計程車約需 1 小時 15 分）</li>
+        <li><span class="time-tag">10:00–11:30</span> <strong>松島海上纜車（松島灣站）</strong> <span class="pay-tag pay-card">可刷卡/線上購票</span></li>
+        <li><span class="time-tag">12:01–14:01</span> <strong>甘川文化村</strong>（小王子拍照、彩繪階梯、文創小店） <span class="pay-tag pay-cash">小店備現金</span></li>
+        <li><span class="time-tag">15:10–16:10</span> <strong>Dongmyeonsik Milmyeon（東萊小麥冷麵）</strong> <span class="pay-tag pay-cash">建議備現金</span></li>
+        <li><span class="time-tag">16:27–19:30</span> <strong>廣安里海水浴場</strong>（欣賞廣安大橋日落與夜景、海景咖啡廳） <span class="pay-tag pay-card">咖啡廳刷卡</span></li>
+      </ul>
+      <div class="alert-box">
+        💡 <strong>Day 3 順路小建議：</strong>松島纜車到甘川文化村距離很近，建議直接搭 <strong>Kakao T 計程車</strong>（車程僅約 12～15 分鐘，車資約 7,000～9,000 韓元，多人分攤比等公車省時很多）；另外 12 月吃小麥冷麵（Milmyeon）偏涼，店內通常有提供熱肉湯或溫水麵可選。
+      </div>
+    </div>
+
+    <div class="card day-card">
+      <div class="day-header">
+        <span class="day-title">Day 4｜12/06 (日) 西面商圈逛街 → Centum City 世界最大百貨</span>
+        <span class="day-route">海雲台 → 西面 → Centum City → 海雲台</span>
+      </div>
+      <ul class="timeline">
+        <li><span class="time-tag">08:00–09:19</span> L7 海雲台出發前往 <strong>西面站</strong>（地鐵 2 號線直達，車程約 35 分鐘，可睡晚一點 09:30 再出門，西面多數店鋪 10:30～11:00 才開門）</li>
+        <li><span class="time-tag">09:19–13:19</span> <strong>西面站商圈</strong>（田浦咖啡街、地下街、豬肉湯飯一條街） <span class="pay-tag pay-card">餐廳/咖啡廳刷卡</span> <span class="pay-tag pay-cash">地下街部分現金</span></li>
+        <li><span class="time-tag">13:32–17:32</span> <strong>新世界百貨公司 Centum City 店</strong>（金氏世界紀錄最大百貨，可順遊 Spa Land 汗蒸幕） <span class="pay-tag pay-card">全館刷卡＋現場退稅</span></li>
+        <li><span class="time-tag">17:38</span> 返回海雲台（距離 Centum City 僅 2 站地鐵）</li>
+      </ul>
+    </div>
+
+    <div class="card day-card">
+      <div class="day-header">
+        <span class="day-title">Day 5｜12/07 (一) 退房前往金海機場返台</span>
+        <span class="day-route">海雲台 → 金海機場 → 桃園機場</span>
+      </div>
+      <ul class="timeline">
+        <li><span class="time-tag">10:48–12:15</span> L7 海雲台退房出發，搭地鐵 2 號線至沙上站轉機場輕軌至 <strong>金海國際機場</strong>（海雲台到機場含轉乘約需 <strong>65～75 分鐘</strong>，建議 10:15～10:30 出發更保險）</li>
+        <li><span class="time-tag">12:15–13:40</span> 辦理登機、行李托運、機場退稅核章與出境（<strong>重要：</strong>若班機是 13:40 起飛，國際線建議起飛前 <strong>2～2.5 小時</strong>即 11:10～11:40 抵達機場，請務必確認機票起飛時間！）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TAB 3: FOOD, CLOTHING, LODGING, TRANSPORT -->
+  <div id="tab-tips" class="tab-content">
+    <div class="pillar-grid">
+      <div class="pillar-card">
+        <h3>🍜 食｜用餐與點餐習慣</h3>
+        <ul>
+          <li><strong>一人一份低消制：</strong>韓國多數餐廳（豬肉湯飯、烤肉、冷麵）要求「每人點一份主餐」，較少接受兩人共食一碗，點餐前先留意門口標示。</li>
+          <li><strong>自助點餐機普及：</strong>如 EGG DROP、連鎖咖啡廳、炸雞店多使用 Kiosk 點餐機，支援海外信用卡；市場攤販則直接指食物或比數量並付現金。</li>
+          <li><strong>冬天吃冰水與辣食：</strong>韓國餐廳一年四季都提供冰開水，腸胃敏感者可自備保溫瓶裝溫水；辣炒年糕與海鮮湯偏辣，不敢吃辣可說「안 맵게 해주세요（An maep-ge hae-ju-se-yo，請做不辣）」。</li>
+          <li><strong>退稅與刷卡幣別：</strong>在 emart、Olive Young、新世界百貨消費滿 15,000 韓元記得帶<strong>實體護照</strong>辦理現場退稅；刷卡機跳出幣別選擇時，務必選 <strong>KRW（韓元）</strong>，選台幣會被收高額匯差手續費。</li>
+        </ul>
+      </div>
+
+      <div class="pillar-card">
+        <h3>🧥 衣｜12月初釜山穿搭指南</h3>
+        <ul>
+          <li><strong>氣溫與體感：</strong>12/3–12/7 釜山氣溫約 <strong>2°C～11°C</strong>，雖較少下雪，但你們行程有大量海邊景點（海雲台、青沙浦、松島纜車、廣安里）及機張山區斜坡滑車，<strong>海風吹起來體感接近 0°C</strong>。</li>
+          <li><strong>洋蔥式穿脫法（室內暖氣極強）：</strong>地鐵、百貨（新世界 Centum City）、餐廳內暖氣開很強，裡面穿太多會流汗。建議：<strong>發熱衣＋針織衫/大學T＋防風厚羽絨外套或羊毛大衣</strong>，進室內直接脫外套最方便。</li>
+          <li><strong>必備防風配件：</strong><strong>圍巾、毛帽或耳罩、手套</strong>（搭斜坡滑車與海邊散步必備）、保濕護唇膏與護手霜（韓國冬季極乾燥）。</li>
+          <li><strong>好走防滑鞋：</strong>甘川文化村有大量陡坡與階梯，切勿穿新鞋或高跟鞋，建議穿厚底運動鞋或短靴配厚襪。</li>
+        </ul>
+      </div>
+
+      <div class="pillar-card">
+        <h3>🏨 住｜海雲台住宿與飯店規範</h3>
+        <ul>
+          <li><strong>環保法規不提供免費牙刷：</strong>韓國飯店響應環保，<strong>不免費提供一次性牙刷、牙膏與刮鬍刀</strong>（部分大廳有販賣機），請務必從台灣自備！洗髮精、沐浴乳與吹風機通常有提供。</li>
+          <li><strong>電壓與轉接頭：</strong>韓國電壓為 <strong>220V</strong>，插座為<strong>雙圓孔（豬鼻子型）</strong>，手機與相機充電器多支援 100–240V 變壓，只需帶圓孔轉接頭即可。</li>
+          <li><strong>L7 海雲台周邊機能：</strong>飯店位於海雲台鬧區核心，步行 3～5 分鐘可達地鐵海雲台站、海雲台海水浴場、傳統市場、EGG DROP 與 Olive Young，晚上買宵夜（60 炸雞、超商）非常方便。</li>
+        </ul>
+      </div>
+
+      <div class="pillar-card">
+        <h3>🚇 行｜交通導航與乘車禮儀</h3>
+        <ul>
+          <li><strong>Google Maps 不能導航：</strong>在韓國境內 Google Maps 無法規劃步行與大眾運輸路線！出發前務必下載 <strong>Naver Map</strong> 或 <strong>KakaoMap</strong>（支援中文介面），直接輸入英文或韓文店名即可導航。</li>
+          <li><strong>交通卡與轉乘優惠：</strong>釜山地鐵與公車刷同一張 T-money/EZL 卡，<strong>下車後 30 分鐘內轉乘</strong>可享免費或大幅折扣，因此<strong>搭公車上下車都要刷卡</strong>（下車忘記刷卡下次會被扣罰款）。</li>
+          <li><strong>叫車 App 備用：</strong>松島纜車往返甘川文化村、或深夜從廣安里回海雲台時，四人分攤計程車費非常划算。建議先在台灣下載 <strong>Uber</strong> 或 <strong>Kakao T</strong>（選擇現場付現/刷卡給司機即可，免韓國門號驗證）。</li>
+          <li><strong>讓座文化：</strong>地鐵車廂兩端的深色座椅（博愛座）與粉紅色孕婦座，即使空著也建議不要坐，避免引起當地長輩誤會。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: CHECKLIST -->
+  <div id="tab-checklist" class="tab-content">
+    <div class="card">
+      <div class="card-title">✅ 旅伴共享出發前確認清單（點擊可勾選，進度會自動保存在瀏覽器）</div>
+      <div class="checklist" id="checklistContainer">
+        <label><input type="checkbox" data-id="c1"> <span><strong>護照效期確認：</strong>確認護照效期滿 6 個月以上，且<strong>隨身攜帶實體護照</strong>（百貨與藥妝店退稅必查）。</span></label>
+        <label><input type="checkbox" data-id="c2"> <span><strong>韓國入境卡（K-ETA / 入境申報）：</strong>台灣旅客免簽證且暫免申請 K-ETA（至 2026 年底），機上填寫紙本入境卡或出發前 3 天內線上填寫電子入境申報書（e-Arrival Card）。</span></label>
+        <label><input type="checkbox" data-id="c3"> <span><strong>海雲台藍線公園線上預約：</strong>12/3 下午 16:00 場次建議提前在官網刷卡預訂，避免現場無票。</span></label>
+        <label><input type="checkbox" data-id="c4"> <span><strong>必備 App 下載：</strong>Naver Map（導航）、Papago（韓文拍照翻譯菜單）、Uber 或 Kakao T（叫車）、WOWPASS（若有使用）。</span></label>
+        <label><input type="checkbox" data-id="c5"> <span><strong>網卡 / eSIM：</strong>建議至少一人開通可接收簡訊或通話的方案（餐廳候位 CatchTable 或聯絡包車/飯店時好用）。</span></label>
+        <label><input type="checkbox" data-id="c6"> <span><strong>盥洗用品與轉接頭：</strong>自備牙刷、牙膏、韓國雙圓孔（220V）轉接頭、行動電源（行動電源<strong>嚴禁托運</strong>，必須隨身帶上飛機）。</span></label>
+        <label><input type="checkbox" data-id="c7"> <span><strong>冬季保暖裝備：</strong>防風厚外套、圍巾、手套、保濕乳液/護唇膏、好走的運動鞋。</span></label>
+        <label><input type="checkbox" data-id="c8"> <span><strong>信用卡與少量台幣/韓元：</strong>確認信用卡已開通海外刷卡功能（記住 4 位數預借現金密碼以備極少數刷卡機驗證），攜帶約 3,500～4,500 台幣現鈔換匯。</span></label>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    整理自「GO 釜山 GO」5天4夜行程表｜祝福旅途順利愉快 🌊🦀
+  </footer>
+</div>
+
+<script>
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function fmt(num) {
+    return Number(num).toLocaleString('en-US');
+  }
+
+  function recalc() {
+    const rate = parseFloat(document.getElementById('exchangeRate').value) || 40.86;
+    const target = parseInt(document.getElementById('targetBudget').value) || 0;
+
+    const card = parseInt(document.getElementById('sl_card').value);
+    const transit = parseInt(document.getElementById('sl_transit').value);
+    const d1m = parseInt(document.getElementById('sl_d1market').value);
+    const d2m = parseInt(document.getElementById('sl_d2market').value);
+    const d3m = parseInt(document.getElementById('sl_d3market').value);
+    const eatery = parseInt(document.getElementById('sl_eatery').value);
+    const buffer = parseInt(document.getElementById('sl_buffer').value);
+
+    document.getElementById('val_card').textContent = '₩ ' + fmt(card);
+    document.getElementById('val_transit').textContent = '₩ ' + fmt(transit);
+    document.getElementById('val_d1market').textContent = '₩ ' + fmt(d1m);
+    document.getElementById('val_d2market').textContent = '₩ ' + fmt(d2m);
+    document.getElementById('val_d3market').textContent = '₩ ' + fmt(d3m);
+    document.getElementById('val_eatery').textContent = '₩ ' + fmt(eatery);
+    document.getElementById('val_buffer').textContent = '₩ ' + fmt(buffer);
+
+    const cat1 = card + transit;
+    const cat2 = d1m + d2m + d3m;
+    const cat3 = eatery + buffer;
+    const total = cat1 + cat2 + cat3;
+
+    document.getElementById('cat1Total').textContent = '₩ ' + fmt(cat1);
+    document.getElementById('cat2Total').textContent = '₩ ' + fmt(cat2);
+    document.getElementById('cat3Total').textContent = '₩ ' + fmt(cat3);
+
+    document.getElementById('totalKrw').textContent = '₩ ' + fmt(total);
+    document.getElementById('totalTwd').textContent = '約台幣 NT$ ' + fmt(Math.round(total / rate));
+
+    document.getElementById('budgetKrwDisplay').textContent = '₩ ' + fmt(target);
+    document.getElementById('budgetTwdDisplay').textContent = '約台幣 NT$ ' + fmt(Math.round(target / rate));
+
+    const diff = target - total;
+    const diffEl = document.getElementById('diffKrw');
+    const statusEl = document.getElementById('diffStatus');
+    if (diff >= 0) {
+      diffEl.textContent = '+ ₩ ' + fmt(diff);
+      diffEl.style.color = '#0e9f6e';
+      statusEl.textContent = `剩餘約 NT$ ${fmt(Math.round(diff / rate))} 緩衝金`;
+    } else {
+      diffEl.textContent = '- ₩ ' + fmt(Math.abs(diff));
+      diffEl.style.color = '#e02424';
+      statusEl.textContent = `建議再多換約 NT$ ${fmt(Math.round(Math.abs(diff) / rate))}`;
+    }
+  }
+
+  function applyPreset(mode) {
+    if (mode === 'frugal') {
+      document.getElementById('sl_card').value = 0;
+      document.getElementById('sl_transit').value = 35000;
+      document.getElementById('sl_d1market').value = 20000;
+      document.getElementById('sl_d2market').value = 25000;
+      document.getElementById('sl_d3market').value = 10000;
+      document.getElementById('sl_eatery').value = 10000;
+      document.getElementById('sl_buffer').value = 10000;
+      document.getElementById('targetBudget').value = 130000;
+    } else if (mode === 'standard') {
+      document.getElementById('sl_card').value = 2500;
+      document.getElementById('sl_transit').value = 40000;
+      document.getElementById('sl_d1market').value = 30000;
+      document.getElementById('sl_d2market').value = 35000;
+      document.getElementById('sl_d3market').value = 20000;
+      document.getElementById('sl_eatery').value = 12500;
+      document.getElementById('sl_buffer').value = 15000;
+      document.getElementById('targetBudget').value = 180000;
+    } else if (mode === 'foodie') {
+      document.getElementById('sl_card').value = 2500;
+      document.getElementById('sl_transit').value = 45000;
+      document.getElementById('sl_d1market').value = 50000;
+      document.getElementById('sl_d2market').value = 55000;
+      document.getElementById('sl_d3market').value = 30000;
+      document.getElementById('sl_eatery').value = 17500;
+      document.getElementById('sl_buffer').value = 20000;
+      document.getElementById('targetBudget').value = 240000;
+    }
+    recalc();
+  }
+
+  // Persist checklist in localStorage
+  document.querySelectorAll('#checklistContainer input[type="checkbox"]').forEach(cb => {
+    const id = cb.dataset.id;
+    if (localStorage.getItem('busan_2026_' + id) === 'true') {
+      cb.checked = true;
+      cb.nextElementSibling.classList.add('checked-text');
+    }
+    cb.addEventListener('change', () => {
+      localStorage.setItem('busan_2026_' + id, cb.checked);
+      cb.nextElementSibling.classList.toggle('checked-text', cb.checked);
+    });
+  });
+
+  recalc();
+</script>
+</body>
+</html>
